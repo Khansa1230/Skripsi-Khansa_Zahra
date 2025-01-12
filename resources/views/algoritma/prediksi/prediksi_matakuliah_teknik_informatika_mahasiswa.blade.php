@@ -97,9 +97,6 @@
 
         <!-- Card untuk menampilkan akurasi -->
         <div class="card mt-4">
-            <div class="card-header">
-                <h5 class="mb-0">Akurasi Model</h5>
-            </div>
             <div class="card-body">
                 <!-- Tabel 1 -->
                 <div class="table-responsive mb-5">

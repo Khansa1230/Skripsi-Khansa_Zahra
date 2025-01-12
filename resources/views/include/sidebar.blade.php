@@ -67,6 +67,9 @@
                             <a href="{{ url('/jumlah_mahasiswa_status') }}">Status</a>
                         </li>
                         <li class="submenu-item ">
+                            <a href="{{ url('/jumlah_mahasiswa_jurusan') }}">Jurusan</a>
+                        </li>
+                        <li class="submenu-item ">
                             <a href="{{ url('/jumlah_mahasiswa_jenis_seleksi') }}">Jenis Seleksi</a>
                         </li>
                         <li class="submenu-item ">

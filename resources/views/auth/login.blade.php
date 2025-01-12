@@ -44,7 +44,7 @@
                             <div class="form-control-icon">
                                 <i class="bi bi-shield-lock"></i>
                             </div>
-                            @error('nim')
+                            @error('password')
                             <small class="btn btn-danger">{{$message}}</small>
                             @enderror
                         </div>

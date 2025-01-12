@@ -10,7 +10,7 @@
     <div class="col-12 col-lg-9">
         <div class="row">
         <div class="col-6 col-lg-3 col-md-6">
-            <a href="{{ route('klasifikasi_c45_dan_evaluation_mahasiswa_agribisnis') }}" class="card">
+            <a href="{{ route('klasifikasi_c45_mahasiswa_agribisnis') }}" class="card">
                 <div class="card-body px-4 py-4-5">
                     <div class="row align-items-center"> <!-- Tambahkan align-items-center -->
                         <div class="col-md-4 col-lg-12 col-xl-12 col-xxl-5 d-flex justify-content-start">
@@ -26,7 +26,7 @@
             </a>
         </div>
         <div class="col-6 col-lg-3 col-md-6">
-            <a href="{{ route('klasifikasi_c45_dan_evaluation_mahasiswa_biologi') }}" class="card">
+            <a href="{{ route('klasifikasi_c45_mahasiswa_biologi') }}" class="card">
                 <div class="card-body px-4 py-4-5">
                     <div class="row align-items-center"> <!-- Tambahkan align-items-center -->
                         <div class="col-md-4 col-lg-12 col-xl-12 col-xxl-5 d-flex justify-content-start">
@@ -42,7 +42,7 @@
             </a>
         </div>
         <div class="col-6 col-lg-3 col-md-6">
-            <a href="{{ route('klasifikasi_c45_dan_evaluation_mahasiswa_fisika') }}" class="card">
+            <a href="{{ route('klasifikasi_c45_mahasiswa_fisika') }}" class="card">
                 <div class="card-body px-4 py-4-5">
                     <div class="row align-items-center"> <!-- Tambahkan align-items-center -->
                         <div class="col-md-4 col-lg-12 col-xl-12 col-xxl-5 d-flex justify-content-start">
@@ -59,7 +59,7 @@
         </div>
 
         <div class="col-6 col-lg-3 col-md-6">
-            <a href="{{ route('klasifikasi_c45_dan_evaluation_mahasiswa_kimia') }}" class="card">
+            <a href="{{ route('klasifikasi_c45_mahasiswa_kimia') }}" class="card">
                 <div class="card-body px-4 py-4-5">
                     <div class="row align-items-center"> <!-- Tambahkan align-items-center -->
                         <div class="col-md-4 col-lg-12 col-xl-12 col-xxl-5 d-flex justify-content-start">
@@ -76,7 +76,7 @@
         </div>
 
         <div class="col-6 col-lg-3 col-md-6">
-            <a href="{{ route('klasifikasi_c45_dan_evaluation_mahasiswa_matematika') }}" class="card">
+            <a href="{{ route('klasifikasi_c45_mahasiswa_matematika') }}" class="card">
                 <div class="card-body px-4 py-4-5">
                     <div class="row align-items-center"> <!-- Tambahkan align-items-center -->
                         <div class="col-md-4 col-lg-12 col-xl-12 col-xxl-5 d-flex justify-content-start">
@@ -93,7 +93,7 @@
         </div>
 
         <div class="col-6 col-lg-3 col-md-6">
-            <a href="{{ route('klasifikasi_c45_dan_evaluation_mahasiswa_sistem_informasi') }}" class="card">
+            <a href="{{ route('klasifikasi_c45_mahasiswa_sistem_informasi') }}" class="card">
                 <div class="card-body px-4 py-4-5">
                     <div class="row">
                         <div class="col-md-4 col-lg-12 col-xl-12 col-xxl-5 d-flex justify-content-start">
@@ -113,7 +113,7 @@
        
 
         <div class="col-6 col-lg-3 col-md-6">
-            <a href="{{ route('klasifikasi_c45_dan_evaluation_mahasiswa_teknik_informatika') }}" class="card">
+            <a href="{{ route('klasifikasi_c45_mahasiswa_teknik_informatika') }}" class="card">
                 <div class="card-body px-4 py-4-5">
                     <div class="row">
                     <div class="col-md-4 col-lg-12 col-xl-12 col-xxl-5 d-flex justify-content-start">
@@ -131,7 +131,7 @@
         </div>
 
         <div class="col-6 col-lg-3 col-md-6">
-            <a href="{{ route('klasifikasi_c45_dan_evaluation_mahasiswa_teknik_tambang') }}" class="card">
+            <a href="{{ route('klasifikasi_c45_mahasiswa_teknik_tambang') }}" class="card">
                 <div class="card-body px-4 py-4-5">
                     <div class="row">
                         <div class="col-md-4 col-lg-12 col-xl-12 col-xxl-5 d-flex justify-content-start">

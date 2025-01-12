@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\DB;
 
 class KlasifikasiC45TeknikTambangController extends Controller
 {
-    public function klasifikasi_dan_evaluation_mahasiswa_teknik_tambang(Request $request)
+    public function klasifikasi_mahasiswa_teknik_tambang(Request $request)
     {
          // Ambil tahun dari database
          $years = DB::table('mahasiswa as m')
@@ -25,82 +25,6 @@ class KlasifikasiC45TeknikTambangController extends Controller
      $totalMahasiswa = 0;
      $entropyTotal1 = 0;
         // Menjalankan query untuk mengambil data dari database
-        $query10 = DB::table('matakuliah as mk')
-            ->join('mahasiswa as m', 'm.nim', '=', 'mk.nim')
-            ->join('jurusan as j', 'mk.kd_jurusan', '=', 'j.kd_jurusan')
-            ->join('jenis_sekolah_mahasiswa_baru as js', 'js.kd_jenis_sekolah', '=', 'm.kd_jenis_sekolah')
-            ->select(
-        DB::raw("CASE 
-                    WHEN mk.sks >= 144 THEN 'Memenuhi'
-                    ELSE 'Belum Memenuhi'
-                END AS kategori_sks"),
-                DB::raw("CASE 
-                    WHEN REPLACE(mk.ipk, ',', '.') >= 2.75 AND REPLACE(mk.ipk, ',', '.') < 3.00 THEN 'Memuaskan'
-                    WHEN REPLACE(mk.ipk, ',', '.') >= 3.00 AND REPLACE(mk.ipk, ',', '.') < 3.50 THEN 'Sangat Memuaskan'
-                    WHEN REPLACE(mk.ipk, ',', '.') >= 3.50 THEN 'Pujian'
-                    WHEN REPLACE(mk.ipk, ',', '.') < 2.75 THEN 'Perbaiki'
-                END AS kategori_ipk"),
-                DB::raw("CASE 
-                    WHEN mk.geologi_lapangan IS NULL OR mk.geologi_lapangan = '' THEN 
-                        CASE 
-                            WHEN mk.status = 'l' THEN 'lulus tidak terdata'
-                            ELSE 'belum terdaftar'
-                        END
-                    ELSE CONCAT('Semester ', mk.geologi_lapangan)
-                END AS kategori_geologi_lapangan"),
-                DB::raw("CASE 
-                     WHEN mk.kuliah_lapangan_1 IS NULL OR mk.kuliah_lapangan_1 = '' THEN 
-                         CASE 
-                             WHEN mk.status = 'l' THEN 'lulus tidak terdata'
-                             ELSE 'belum terdaftar'
-                         END
-                     ELSE CONCAT('Semester ', mk.kuliah_lapangan_1)
-                END AS kategori_kuliah_lapangan_1"),
-                DB::raw("CASE 
-                    WHEN mk.kuliah_lapangan_2 IS NULL OR mk.kuliah_lapangan_2 = '' THEN 
-                        CASE 
-                            WHEN mk.status = 'l' THEN 'lulus tidak terdata'
-                            ELSE 'belum terdaftar'
-                        END
-                    ELSE CONCAT('Semester ', mk.kuliah_lapangan_2)
-                END AS kategori_kuliah_lapangan_2"),
-                DB::raw("CASE 
-                    WHEN mk.kuliah_kerja_nyata IS NULL OR mk.kuliah_kerja_nyata = '' THEN 
-                        CASE 
-                            WHEN mk.status = 'l' THEN 'lulus tidak terdata'
-                            ELSE 'belum terdaftar'
-                        END
-                    ELSE CONCAT('Semester ', mk.kuliah_kerja_nyata)
-                END AS kategori_kuliah_kerja_nyata"),
-                DB::raw("CASE 
-                    WHEN mk.kuliah_kerja_lapangan IS NOT NULL AND mk.kuliah_kerja_lapangan != '' 
-                        THEN CONCAT('Semester ', mk.kuliah_kerja_lapangan)
-                    WHEN mk.kuliah_lapangan IS NOT NULL AND mk.kuliah_lapangan != ''
-                        THEN CONCAT('Semester ', mk.kuliah_lapangan)
-                    WHEN mk.kuliah_kerja_lapangan IS NULL AND mk.kuliah_lapangan IS NULL THEN NULL
-                    ELSE 
-                        CASE 
-                            WHEN mk.status = 'Lulus' THEN 'lulus tidak terdata'
-                            ELSE 'belum daftar'
-                        END
-                END AS kategori_pkl"),
-                DB::raw("CASE 
-                    WHEN mk.seminar IS NULL OR mk.seminar = '' THEN 
-                        CASE 
-                            WHEN mk.status = 'Lulus' THEN 'lulus tidak terdata'
-                            ELSE 'Belum Daftar'
-                        END
-                    ELSE CONCAT('Semester ', mk.seminar)
-                END AS kategori_seminar"),
-                DB::raw("
-                CASE 
-                    WHEN mk.status IN ('Aktif', 'Cuti', 'Drop Out', 'Mengundurkan Diri') THEN 'Belum Lulus'
-                    WHEN mk.status = 'Lulus' THEN 'Lulus'
-                    ELSE 'Belum Lulus'
-                END AS kategori
-                "),
-            )
-            ->where('j.jurusan', '=', 'Agribisnis');
            
          // Query 1: Mengambil data jenis status dan jumlah mahasiswa
          $query1 = DB::table('matakuliah as mk')
@@ -116,7 +40,7 @@ class KlasifikasiC45TeknikTambangController extends Controller
              "),
              DB::raw("COUNT(m.nim) AS total_mahasiswa")
          )
-         ->where('j.jurusan', 'Agribisnis')
+         ->where('j.jurusan', 'Teknik Pertambangan')
          ->groupBy('jenis_status');
  
          // Query 2: Mengambil data status mahasiswa (Aktif, Lulus, dsb)
@@ -129,7 +53,7 @@ class KlasifikasiC45TeknikTambangController extends Controller
                  DB::raw("COUNT(CASE WHEN mk.status IN ('Tidak Aktif', 'Aktif', 'Cuti', 'Drop Out', 'Mengundurkan Diri') THEN 1 END) AS belum_lulus"),
                  DB::raw("COUNT(CASE WHEN mk.status = 'Lulus' THEN 1 END) AS lulus")
              )
-             ->where('j.jurusan', 'Agribisnis')
+             ->where('j.jurusan', 'Teknik Pertambangan')
              ->groupBy('mk.status')
              ->orderBy('mk.status');
 
@@ -143,7 +67,7 @@ class KlasifikasiC45TeknikTambangController extends Controller
                  DB::raw("COUNT(CASE WHEN mk.status IN ('Tidak Aktif', 'Aktif', 'Cuti', 'Drop Out', 'Mengundurkan Diri') THEN 1 END) AS belum_lulus"),
                  DB::raw("COUNT(CASE WHEN mk.status = 'Lulus' THEN 1 END) AS lulus")
              )
-             ->where('j.jurusan', 'Agribisnis')
+             ->where('j.jurusan', 'Teknik Pertambangan')
              ->groupBy('jenis_sekolah')  // Perbaikan: Gunakan js.jenis_sekolah untuk konsistensi
              ->orderBy('jenis_sekolah'); // Perbaikan: Urutkan berdasarkan jenis_sekolah yang benar
  
@@ -161,7 +85,7 @@ class KlasifikasiC45TeknikTambangController extends Controller
                  DB::raw("COUNT(CASE WHEN mk.status IN ('Tidak Aktif', 'Aktif', 'Cuti', 'Drop Out', 'Mengundurkan Diri') THEN 1 END) AS belum_lulus"),
                  DB::raw("COUNT(CASE WHEN mk.status = 'Lulus' THEN 1 END) AS lulus")
              )
-             ->where('j.jurusan', 'Agribisnis')
+             ->where('j.jurusan', 'Teknik Pertambangan')
              ->groupBy('tahun_lulus')
              ->orderByRaw("FIELD(tahun_lulus, 'Belum Daftar') DESC, tahun_lulus ASC"); // Atur urutan dengan 'Belum Daftar' di atas
          
@@ -179,7 +103,7 @@ class KlasifikasiC45TeknikTambangController extends Controller
                  DB::raw("COUNT(CASE WHEN mk.status IN ('Tidak Aktif', 'Aktif', 'Cuti', 'Drop Out', 'Mengundurkan Diri') THEN 1 END) AS belum_lulus"),
                  DB::raw("COUNT(CASE WHEN mk.status = 'Lulus' THEN 1 END) AS lulus")
              )
-             ->where('j.jurusan', 'Agribisnis')
+             ->where('j.jurusan', 'Teknik Pertambangan')
              ->groupBy('kategori_sks')  // Menggunakan alias kategori_sks yang sudah didefinisikan di select
              ->orderBy('kategori_sks');  // Menggunakan alias kategori_sks yang sudah didefinisikan di select
  
@@ -198,7 +122,7 @@ class KlasifikasiC45TeknikTambangController extends Controller
                  DB::raw("COUNT(CASE WHEN mk.status IN ('Tidak Aktif', 'Aktif', 'Cuti', 'Drop Out', 'Mengundurkan Diri') THEN 1 END) AS belum_lulus"),
                  DB::raw("COUNT(CASE WHEN mk.status = 'Lulus' THEN 1 END) AS lulus")
              )
-             ->where('j.jurusan', 'Agribisnis')
+             ->where('j.jurusan', 'Teknik Pertambangan')
              ->groupBy(DB::raw("kategori_ipk")) 
              ->orderBy('kategori_ipk');
  
@@ -341,12 +265,9 @@ class KlasifikasiC45TeknikTambangController extends Controller
             $query7->whereYear('m.tahun_angkatan', '=', $year);
             $query8->whereYear('m.tahun_angkatan', '=', $year);
             $query9->whereYear('m.tahun_angkatan', '=', $year);
-            $query10->whereYear('m.tahun_angkatan', '=', $year);
             $query11->whereYear('m.tahun_angkatan', '=', $year);
             $query12->whereYear('m.tahun_angkatan', '=', $year);
             $query13->whereYear('m.tahun_angkatan', '=', $year);
-
-
         }
 
         
@@ -361,7 +282,6 @@ class KlasifikasiC45TeknikTambangController extends Controller
         $result7 = $query7->get();
         $result8 = $query8->get();
         $result9 = $query9->get();
-        $query10 = $query10->get();
         $result11 = $query11->get();
         $result12 = $query12->get();
         $result13 = $query13->get();
@@ -380,14 +300,7 @@ class KlasifikasiC45TeknikTambangController extends Controller
             }
         }
         //dd($result1);
-        // Pastikan predictedLulus memiliki nilai integer
-        if (is_null($predictedLulus)) {
-            $predictedLulus = 0; // Set ke 0 jika null
-        }
-        
-        // Hitung evaluasi matriks (jika ada fungsi ini)
-        $evaluation = $this->calculateEvaluationMatriks($statusCount1, $total1, (int)$predictedLulus);
-    
+       
         // Hitung entropi berbobot total (jika ada fungsi ini)
         $total2 = $this->calculateTotalWeightedEntropy($result2, $entropyTotal1, $total1, 'status');
         $total3 = $this->calculateTotalWeightedEntropy($result3, $entropyTotal1, $total1, 'jenis_sekolah');
@@ -400,68 +313,216 @@ class KlasifikasiC45TeknikTambangController extends Controller
         $total11 = $this->calculateTotalWeightedEntropy($result11, $entropyTotal1, $total1, 'kategori_kuliah_kerja_nyata');
         $total12 = $this->calculateTotalWeightedEntropy($result12, $entropyTotal1, $total1, 'kategori_pkl');
         $total13 = $this->calculateTotalWeightedEntropy($result13, $entropyTotal1, $total1, 'kategori_seminar');
-        // Mengonversi hasil query menjadi format yang bisa digunakan oleh Python
-        $data = [];
-        foreach ($query10 as $row) {
-            $data[] = [
-                'kategori_sks' => $row->kategori_sks, 
-                'kategori_ipk' => $row->kategori_ipk,
-                'kategori_geologi_lapangan' => $row->kategori_geologi_lapangan,
-                'kategori_kuliah_lapangan_1' => $row->kategori_kuliah_lapangan_1,
-                'kategori_kuliah_lapangan_2' => $row->kategori_kuliah_lapangan_2,
-                'kategori_kuliah_kerja_nyata' => $row->kategori_kuliah_kerja_nyata,
-                'kategori_pkl' => $row->kategori_pkl,
-                'kategori_seminar' => $row->kategori_seminar,
-                'kategori' => $row->kategori,
-            ];
+        
+// Mengembalikan view dengan data dan pemetaan kolom
+return view('algoritma.klasifikasi_c45_matakuliah_teknik_tambang_mahasiswa', compact('total1','years',  'year', 'result1', 'total2', 
+        'total3', 'total4', 'total5', 'total6', 'total7', 'total8', 'total9', 'total11', 'total12', 'total13', 'entropyTotal1',  'totalMahasiswa'));
+    }
+
+    public function prediksi_mahasiswa_teknik_tambang(Request $request)
+    {
+         // Ambil tahun dari database
+         $years = DB::table('mahasiswa as m')
+         ->select(DB::raw('YEAR(m.tahun_angkatan) as year'))
+         ->groupBy('year')
+         ->orderBy('year', 'DESC')
+         ->get();
+ 
+        // Ambil input dari pengguna
+        $predictedLulus = $request->input('predicted_lulus');
+        $year = $request->input('year', 'Semua'); 
+        // Hitung test_size
+        $testSize = 100 - $predictedLulus; // Menghitung test_size
+        // Inisialisasi variabel untuk hasil query dan perhitungan entropi
+        $result1 = [];
+        $totalMahasiswa = 0;
+        $entropyTotal1 = 0;
+        // Menjalankan query untuk mengambil data dari database
+        $query10 = DB::table('matakuliah as mk')
+        ->join('mahasiswa as m', 'm.nim', '=', 'mk.nim')
+        ->join('jurusan as j', 'mk.kd_jurusan', '=', 'j.kd_jurusan')
+        ->join('jenis_sekolah_mahasiswa_baru as js', 'js.kd_jenis_sekolah', '=', 'm.kd_jenis_sekolah')
+        ->select(
+    DB::raw("CASE 
+                WHEN mk.sks >= 144 THEN 'Memenuhi'
+                ELSE 'Belum Memenuhi'
+            END AS kategori_sks"),
+            DB::raw("CASE 
+                WHEN REPLACE(mk.ipk, ',', '.') >= 2.75 AND REPLACE(mk.ipk, ',', '.') < 3.00 THEN 'Memuaskan'
+                WHEN REPLACE(mk.ipk, ',', '.') >= 3.00 AND REPLACE(mk.ipk, ',', '.') < 3.50 THEN 'Sangat Memuaskan'
+                WHEN REPLACE(mk.ipk, ',', '.') >= 3.50 THEN 'Pujian'
+                WHEN REPLACE(mk.ipk, ',', '.') < 2.75 THEN 'Perbaiki'
+            END AS kategori_ipk"),
+            DB::raw("CASE 
+                WHEN mk.geologi_lapangan IS NULL OR mk.geologi_lapangan = '' THEN 
+                    CASE 
+                        WHEN mk.status = 'l' THEN 'lulus tidak terdata'
+                        ELSE 'belum terdaftar'
+                    END
+                ELSE CONCAT('Semester ', mk.geologi_lapangan)
+            END AS kategori_geologi_lapangan"),
+            DB::raw("CASE 
+                 WHEN mk.kuliah_lapangan_1 IS NULL OR mk.kuliah_lapangan_1 = '' THEN 
+                     CASE 
+                         WHEN mk.status = 'l' THEN 'lulus tidak terdata'
+                         ELSE 'belum terdaftar'
+                     END
+                 ELSE CONCAT('Semester ', mk.kuliah_lapangan_1)
+            END AS kategori_kuliah_lapangan_1"),
+            DB::raw("CASE 
+                WHEN mk.kuliah_lapangan_2 IS NULL OR mk.kuliah_lapangan_2 = '' THEN 
+                    CASE 
+                        WHEN mk.status = 'l' THEN 'lulus tidak terdata'
+                        ELSE 'belum terdaftar'
+                    END
+                ELSE CONCAT('Semester ', mk.kuliah_lapangan_2)
+            END AS kategori_kuliah_lapangan_2"),
+            DB::raw("CASE 
+                WHEN mk.kuliah_kerja_nyata IS NULL OR mk.kuliah_kerja_nyata = '' THEN 
+                    CASE 
+                        WHEN mk.status = 'l' THEN 'lulus tidak terdata'
+                        ELSE 'belum terdaftar'
+                    END
+                ELSE CONCAT('Semester ', mk.kuliah_kerja_nyata)
+            END AS kategori_kuliah_kerja_nyata"),
+            DB::raw("CASE 
+                WHEN mk.kuliah_kerja_lapangan IS NOT NULL AND mk.kuliah_kerja_lapangan != '' 
+                    THEN CONCAT('Semester ', mk.kuliah_kerja_lapangan)
+                WHEN mk.kuliah_lapangan IS NOT NULL AND mk.kuliah_lapangan != ''
+                    THEN CONCAT('Semester ', mk.kuliah_lapangan)
+                WHEN mk.kuliah_kerja_lapangan IS NULL AND mk.kuliah_lapangan IS NULL THEN NULL
+                ELSE 
+                    CASE 
+                        WHEN mk.status = 'Lulus' THEN 'lulus tidak terdata'
+                        ELSE 'belum daftar'
+                    END
+            END AS kategori_pkl"),
+            DB::raw("CASE 
+                WHEN mk.seminar IS NULL OR mk.seminar = '' THEN 
+                    CASE 
+                        WHEN mk.status = 'Lulus' THEN 'lulus tidak terdata'
+                        ELSE 'Belum Daftar'
+                    END
+                ELSE CONCAT('Semester ', mk.seminar)
+            END AS kategori_seminar"),
+            DB::raw("
+            CASE 
+                WHEN mk.status IN ('Aktif', 'Cuti', 'Drop Out', 'Mengundurkan Diri') THEN 'Belum Lulus'
+                WHEN mk.status = 'Lulus' THEN 'Lulus'
+                ELSE 'Belum Lulus'
+            END AS kategori
+            "),
+        )
+        ->where('j.jurusan', '=', 'Teknik Pertambangan');
+
+        // Filter by year if provided
+        if ($year && $year !== 'Semua') {
+            $query10->whereYear('m.tahun_angkatan', '=', $year);
         }
 
-        //dd($query10, $data);
+        // Eksekusi query untuk mengambil hasil
+        $query10 = $query10->get();
+        
+         // Hitung test_size
+         $testSize = 100 - $predictedLulus; // Menghitung test_size
 
-        // Menyimpan data ke file JSON untuk digunakan di Python
-        $jsonFilePath = 'C:\\xampp\\htdocs\\skripsi\\app\\python_scripts\\teknik_tambang\\data.json';
-        file_put_contents($jsonFilePath, json_encode($data));
- // Menyimpan informasi kol om yang terkait dengan setiap kategori
- $columnMapping = [
-    'kategori_sks' => 'Satuan Kredit Skor',
-    'kategori_ipk' => 'Indeks Prestasi Kumulatif',
-    'kategori_geologi_lapangan' => 'Geologi Lapangan',
-    'kategori_kuliah_lapangan_1' => 'Kuliah Lapangan 1',
-    'kategori_kuliah_lapangan_2' => 'Kuliah Lapangan 2',
-    'kategori_pkl' => 'Praktek Kerja Lapangan', // atau kolom lain yang relevan
-    'kategori_kkn' => 'Kuliah Kerja Nyata',
-    'kategori_seminar' => 'Seminar',
-];
+        // Simpan test_size ke file JSON untuk digunakan di Python
+        $testSizeFilePath = 'C:\\xampp\\htdocs\\skripsi\\app\\python_scripts\\teknik_tambang\\test_size.json';
+        file_put_contents($testSizeFilePath, json_encode(['test_size' => $testSize]));
+       // Mengonversi hasil query menjadi format yang bisa digunakan oleh Python
+       $data = [];
+       foreach ($query10 as $row) {
+           $data[] = [
+               'kategori_sks' => $row->kategori_sks, 
+               'kategori_ipk' => $row->kategori_ipk,
+               'kategori_geologi_lapangan' => $row->kategori_geologi_lapangan,
+               'kategori_kuliah_lapangan_1' => $row->kategori_kuliah_lapangan_1,
+               'kategori_kuliah_lapangan_2' => $row->kategori_kuliah_lapangan_2,
+               'kategori_kuliah_kerja_nyata' => $row->kategori_kuliah_kerja_nyata,
+               'kategori_pkl' => $row->kategori_pkl,
+               'kategori_seminar' => $row->kategori_seminar,
+               'kategori' => $row->kategori,
+           ];
+       }
 
-// Menjalankan skrip Python
-$pythonScriptPath = 'C:\\xampp\\htdocs\\skripsi\\app\\python_scripts\\teknik_tambang\\decision_tree_visualization.py';
-$output = shell_exec("python \"$pythonScriptPath\"");
+       //dd($query10, $data);
 
-// Decode output JSON
-$result = json_decode($output, true);
+       // Menyimpan data ke file JSON untuk digunakan di Python
+       $jsonFilePath = 'C:\\xampp\\htdocs\\skripsi\\app\\python_scripts\\teknik_tambang\\data.json';
+       file_put_contents($jsonFilePath, json_encode($data));
+        // Menyimpan informasi kol om yang terkait dengan setiap kategori
+        $columnMapping = [
+        'kategori_sks' => 'Satuan Kredit Skor',
+        'kategori_ipk' => 'Indeks Prestasi Kumulatif',
+        'kategori_geologi_lapangan' => 'Geologi Lapangan',
+        'kategori_kuliah_lapangan_1' => 'Kuliah Lapangan 1',
+        'kategori_kuliah_lapangan_2' => 'Kuliah Lapangan 2',
+        'kategori_pkl' => 'Praktek Kerja Lapangan', // atau kolom lain yang relevan
+        'kategori_kkn' => 'Kuliah Kerja Nyata',
+        'kategori_seminar' => 'Seminar',
+        ];
 
-// Pastikan hasilnya adalah array dan memiliki kunci yang benar
-if (json_last_error() !== JSON_ERROR_NONE) {
-    // Jika terjadi kesalahan saat decoding JSON
-    $outputData = [
-        'tree_text' => 'Gagal mengurai output dari skrip Python.',
-        'first_true_path' => [],
-    ];
-} else {
-    // Ambil data dari hasil
-    $treeText = isset($result['tree_text']) ? $result['tree_text'] : 'Tidak ada teks pohon keputusan.';
-    $firstTruePath = isset($result['first_true_path']) ? $result['first_true_path'] : [];
+        // Menjalankan skrip Python
+        $pythonScriptPath = 'C:\\xampp\\htdocs\\skripsi\\app\\python_scripts\\teknik_tambang\\decision_tree_visualization.py';
+        $output = shell_exec("python \"$pythonScriptPath\"");
 
-    // Mengatur output sebagai array
-    $outputData = [
-        'tree_text' => $treeText,
-        'first_true_path' => $firstTruePath,
-    ];
-}
+        // Decode output JSON
+        $result = json_decode($output, true);
+        // Pastikan hasilnya adalah array dan memiliki kunci yang benar
+        if (json_last_error() !== JSON_ERROR_NONE) {
+            // Jika terjadi kesalahan saat decoding JSON
+            $outputData = [
+                'tree_text' => 'Gagal mengurai output dari skrip Python.',
+                'first_true_path' => [],
+                'accuracy' => null,  // Menambahkan key untuk akurasi
+            ];
+        } else {
+            // Ambil data dari hasil
+            $treeText = isset($result['tree_text']) ? $result['tree_text'] : 'Tidak ada teks pohon keputusan.';
+            $firstTruePath = isset($result['first_true_path']) ? $result['first_true_path'] : [];
+            $accuracy = isset($result['accuracy']) ? $result['accuracy'] : null;  // Mengambil akurasi
+            $testSize = isset($result['test_size']) ? $result['test_size'] : null;  // Mengambil test_size
+            $precision = isset($result['precision']) ? $result['precision'] : null;  // Mengambil precision
+            $recall = isset($result['recall']) ? $result['recall'] : null;  // Mengambil recall
+            $f1Score = isset($result['f1_score']) ? $result['f1_score'] : null;  // Mengambil F1 Score
 
-// Mengembalikan view dengan data dan pemetaan kolom
-return view('algoritma.klasifikasi_c45_dan_prediksi_matakuliah_teknik_tambang_mahasiswa', compact('outputData', 'total1', 'columnMapping','years', 'predictedLulus', 'year', 'result1', 'total2', 
-        'total3', 'total4', 'total5', 'total6', 'total7', 'total8', 'total9', 'total11', 'total12', 'total13', 'entropyTotal1', 'evaluation', 'totalMahasiswa'));
+            // Mengambil matriks kebingungan
+            $confusionMatrix = isset($result['confusion_matrix']) ? $result['confusion_matrix'] : [];  // Mengambil matriks kebingungan
+
+            // Memastikan matriks kebingungan memiliki ukuran yang benar
+            if (count($confusionMatrix) > 0) {
+                // Mengambil TP, TN, FP, FN dari matriks kebingungan
+                $TN = $confusionMatrix[0][0];  // True Negatives
+                $FP = $confusionMatrix[0][1];  // False Positives
+                $FN = $confusionMatrix[1][0];  // False Negatives
+                $TP = $confusionMatrix[1][1];  // True Positives
+            } else {
+                // Jika matriks kebingungan tidak ada, set nilai default
+                $TP = $FP = $TN = $FN = 0;
+            }
+
+            // Mengatur output sebagai array
+            $outputData = [
+                'tree_text' => $treeText,
+                'first_true_path' => $firstTruePath,
+                'accuracy' => $accuracy,  // Menambahkan akurasi ke output
+                'test_size' => $testSize,  // Menambahkan test_size ke output
+                'precision' => $precision,  // Menambahkan precision ke output
+                'recall' => $recall,        // Menambahkan recall ke output
+                'f1_score' => $f1Score,     // Menambahkan F1 Score ke output
+                'TP' => $TP,                // Menambahkan True Positives ke output
+                'FP' => $FP,                // Menambahkan False Positives ke output
+                'TN' => $TN,                // Menambahkan True Negatives ke output
+                'FN' => $FN,                // Menambahkan False Negatives ke output
+                'confusion_matrix' => $confusionMatrix  // Menambahkan matriks kebingungan ke output
+            ];
+
+            //DD($outputData);
+            }
+
+        // Mengembalikan view dengan data dan pemetaan kolom
+        return view('algoritma.prediksi.prediksi_matakuliah_teknik_tambang_mahasiswa', compact('outputData', 'columnMapping','years', 'predictedLulus', 'year' 
+            ));
     }
 
     public function calculateEntropy(object $item, float $entropyTotal1, float $total1): array {
@@ -525,46 +586,4 @@ return view('algoritma.klasifikasi_c45_dan_prediksi_matakuliah_teknik_tambang_ma
         return $results;
     }
 
-    public function calculateEvaluationMatriks(array $statusCount1, int $total1, int $predictedLulus): array
-    {
-        // Data evaluasi awal
-        $data1 = [
-            'total_mahasiswa' => $total1,
-            'belum_lulus' => $statusCount1['Belum Lulus'] ?? 0,
-            'lulus' => $statusCount1['Lulus'] ?? 0,
-        ];
-
-        // Inisialisasi variabel TP, TN, FN, FP
-        $TP = $data1['lulus']; // True Positive
-        $TN = $data1['belum_lulus']; // True Negative
-        $FN = 0;
-        $FP = 0;
-
-        // Hitung FN dan FP
-        if ($predictedLulus < $TP) {
-            $FN = $TP - $predictedLulus; // False Negative
-        } elseif ($predictedLulus > $TP) {
-            $FP = $predictedLulus - $TP; // False Positive
-        }
-
-        // Hitung akurasi
-        $accuracy = ($TP + $TN) > 0 ? ($TP + $TN) / ($TP + $TN + $FP + $FN) : 0;
-        // Hitung Presisi
-        $precision = ($TP) > 0 ? ($TP) / ($TP +  $FP ) : 0;
-        // Hitung Recall
-        $recall = ($TP) > 0 ? ($TP) / ($TP +  $FN ) : 0;
-        // Hitung F1-Score
-        $f1_score = ($precision + $recall) > 0 ? 2 * ($precision * $recall) / ($precision + $recall) : 0;
-        // Tambahkan hasil evaluasi ke data
-        $data1['TP'] = $TP;
-        $data1['TN'] = $TN;
-        $data1['FN'] = $FN;
-        $data1['FP'] = $FP;
-        $data1['accuracy'] = $accuracy;
-        $data1['precision'] = $precision;
-        $data1['recall'] = $recall;
-        $data1['f1_score'] = $f1_score;
-
-        return $data1;
-    }
 }

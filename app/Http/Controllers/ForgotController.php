@@ -18,17 +18,19 @@ class ForgotController extends Controller
         $request->validate([
             'email_uin' => 'required|string|exists:users,email_uin', // Pastikan email ada di tabel users
             'password' => [
-                'required',
-                'string',
-                'min:8',
-                'regex:/[A-Z]/', // Setidaknya satu huruf kapital
-                'regex:/[a-z]/', // Setidaknya satu huruf kecil
-                'regex:/[0-9]/', // Setidaknya satu angka
-                'confirmed' // Memeriksa password dan password_confirmation
-            ],
+    'required',
+    'string',
+    'min:8',
+    'regex:/[A-Z]/', // Setidaknya satu huruf kapital
+    'regex:/[a-z]/', // Setidaknya satu huruf kecil
+    'regex:/[0-9]/', // Setidaknya satu angka
+    'regex:/^(?=.*[a-zA-Z].*[a-zA-Z]).*$/',
+    'confirmed', // Memeriksa password dan password_confirmation
+],
         ], [
             'password.regex' => 'The password must include at least one uppercase letter (A-Z), one lowercase letter (a-z), and one number (0-9).',
             'password.confirmed' => 'The password confirmation does not match.',
+            'password_confirmation.same' => 'The password confirmation does not match the password.', // Pesan error jika password_confirmation tidak sesuai
         ]);
 
         // Temukan pengguna berdasarkan email

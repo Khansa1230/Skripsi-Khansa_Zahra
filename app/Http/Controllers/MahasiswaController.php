@@ -117,6 +117,52 @@ class MahasiswaController extends Controller
         // Mengembalikan view dengan data yang diperlukan
         return view('mahasiswa.jenis_status_mahasiswa', compact('years', 'allJurusan', 'allStatus', 'selectedJurusan', 'query'));
     }
+
+    public function jumlah_mahasiswa_jurusan(Request $request) {
+        // Mengambil tahun angkatan mahasiswa (tanpa filter status)
+        $years = DB::table('mahasiswa as m')
+            ->select(DB::raw('YEAR(m.tahun_angkatan) as year'))
+            ->groupBy('year')
+            ->orderBy('year', 'DESC')
+            ->get();
+    
+        // Mengambil semua status yang ada
+        $allStatus = DB::table('matakuliah as mk')
+            ->select('status')
+            ->distinct()
+            ->orderBy('status')
+            ->get();
+    
+        // Mengambil input tahun dan jurusan dari request
+        $year = $request->input('year');
+        $selectedStatus = $request->input('status');
+    
+        // Memulai query dengan fokus pada mahasiswa
+        $query = DB::table('mahasiswa as m')
+            ->join('matakuliah as mk', 'm.nim', '=', 'mk.nim')
+            ->select(
+                'mk.jurusan',
+                DB::raw('COUNT(m.nim) as jumlah_mahasiswa')
+            );
+    
+        // Penerapan filter tahun jika dipilih dan tidak sama dengan 'Semua'
+        if ($year && $year !== 'Semua') {
+            $query->whereYear('m.tahun_angkatan', '=', $year);
+        }
+    
+        // Penerapan filter status jika dipilih dan tidak sama dengan 'Semua'
+        if ($selectedStatus && $selectedStatus !== 'Semua') {
+            $query->where('mk.status', '=', $selectedStatus);
+        }
+    
+        // Kelompokkan data berdasarkan jurusan
+        $query = $query->groupBy('mk.jurusan')
+                       ->orderBy('mk.jurusan')
+                       ->get();
+        //dd($query);
+        // Mengembalikan view dengan data yang diperlukan
+        return view('mahasiswa.jenis_jurusan_mahasiswa', compact('years', 'allStatus', 'selectedStatus', 'query'));
+    }
     
     public function jumlah_mahasiswa_jenis_seleksi(Request $request) {
         // Mengambil tahun angkatan mahasiswa (tanpa filter status)

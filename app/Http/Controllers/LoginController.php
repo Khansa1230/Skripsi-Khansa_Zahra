@@ -15,30 +15,50 @@ class LoginController extends Controller
         return view('auth.login'); // Jika belum login, tampilkan halaman login
     }
     public function login(Request $request)
-    {
-        // Validasi input
-        $credentials = $request->validate([
-            'nim' => ['required', 'string', 'exists:mahasiswa,nim'], // 'exists' memastikan NIM terdaftar di tabel mahasiswa
-            'password' => ['required'],
-        ]);
+{
+    // Validasi input
+    $credentials = $request->validate([
+        'nim' => ['required', 'string'],
+        'password' => ['required'],
+    ]);
 
-        // Cek kredensial dengan Auth
-        if (Auth::attempt($credentials)) {
-            $request->session()->regenerate();
-            return redirect()->intended('dashboard');
-        }
+    // Periksa apakah NIM ada di tabel users
+    $nimExists = \DB::table('users')->where('nim', $credentials['nim'])->exists();
 
+    if (!$nimExists) {
+        // Jika NIM tidak ada di tabel users
         return back()->withErrors([
-            'nim' => 'The provided credentials do not match our records.',
+            'nim' => 'The provided NIM is not registered.',
         ])->onlyInput('nim');
     }
-        public function logout(Request $request)
+
+    // Jika NIM ada, cek kredensial dengan Auth
+    if (Auth::attempt($credentials)) {
+        // Jika login berhasil
+        $request->session()->regenerate();
+        return redirect()->intended('dashboard');
+    }
+
+    // Jika password salah
+    return back()->withErrors([
+        'password' => 'The provided Password is incorrect.',
+    ])->onlyInput('nim');
+}
+
+
+    public function logout(Request $request)
     {
+        \Log::info('User logout initiated.');
+    
         Auth::logout();
+    
+        \Log::info('User successfully logged out.');
     
         $request->session()->invalidate();
     
         $request->session()->regenerateToken();
+    
+        \Log::info('Session invalidated and token regenerated.');
     
         return redirect('/');
     }

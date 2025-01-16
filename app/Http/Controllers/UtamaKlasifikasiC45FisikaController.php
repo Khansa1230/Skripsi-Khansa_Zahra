@@ -5,9 +5,9 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
-class KlasifikasiC45FisikaController extends Controller
+class UtamaKlasifikasiC45FisikaController extends Controller
 {
-    public function klasifikasi_mahasiswa_fisika(Request $request)
+    public function klasifikasi_mahasiswa_jurusan_fisika(Request $request)
     {
          // Ambil tahun dari database
          $years = DB::table('mahasiswa as m')
@@ -258,11 +258,11 @@ class KlasifikasiC45FisikaController extends Controller
         
 
 // Mengembalikan view dengan data dan pemetaan kolom
-return view('fisika.algoritma.klasifikasi_c45_matakuliah_fisika_mahasiswa', compact( 'total1', 'years', 'predictedLulus', 'year', 'result1', 'total2', 
+return view('utama.algoritma.klasifikasi_c45_matakuliah_fisika_mahasiswa', compact( 'total1', 'years', 'predictedLulus', 'year', 'result1', 'total2', 
         'total3', 'total4', 'total5', 'total6', 'total7', 'total8', 'total9', 'entropyTotal1', 'evaluation', 'totalMahasiswa'));
     }
     
-    public function prediksi_mahasiswa_fisika(Request $request)
+    public function prediksi_mahasiswa_jurusan_fisika(Request $request)
     {
          // Ambil tahun dari database
          $years = DB::table('mahasiswa as m')
@@ -441,7 +441,7 @@ return view('fisika.algoritma.klasifikasi_c45_matakuliah_fisika_mahasiswa', comp
             }
 
         // Mengembalikan view dengan data dan pemetaan kolom
-        return view('fisika.algoritma.prediksi.prediksi_matakuliah_fisika_mahasiswa', compact('outputData', 'columnMapping','years', 'predictedLulus', 'year' 
+        return view('utama.algoritma.prediksi.prediksi_matakuliah_fisika_mahasiswa', compact('outputData', 'columnMapping','years', 'predictedLulus', 'year' 
             ));
      }
    

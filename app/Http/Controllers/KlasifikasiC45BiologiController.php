@@ -255,7 +255,7 @@ class KlasifikasiC45BiologiController extends Controller
         $total9 = $this->calculateTotalWeightedEntropy($result9, $entropyTotal1, $total1, 'kategori_seminar');
         
 // Mengembalikan view dengan data dan pemetaan kolom
-return view('algoritma.klasifikasi_c45_matakuliah_biologi_mahasiswa', compact( 'total1','years', 'year', 'result1', 'total2', 
+return view('biologi.algoritma.klasifikasi_c45_matakuliah_biologi_mahasiswa', compact( 'total1','years', 'year', 'result1', 'total2', 
         'total3', 'total4', 'total5', 'total6', 'total7', 'total8', 'total9', 'entropyTotal1', 'totalMahasiswa'));
     }
     
@@ -438,7 +438,7 @@ return view('algoritma.klasifikasi_c45_matakuliah_biologi_mahasiswa', compact( '
             }
 
         // Mengembalikan view dengan data dan pemetaan kolom
-        return view('algoritma.prediksi.prediksi_matakuliah_biologi_mahasiswa', compact('outputData', 'columnMapping','years', 'predictedLulus', 'year' 
+        return view('biologi.algoritma.prediksi.prediksi_matakuliah_biologi_mahasiswa', compact('outputData', 'columnMapping','years', 'predictedLulus', 'year' 
             ));
      }
    

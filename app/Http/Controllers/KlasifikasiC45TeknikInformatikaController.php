@@ -258,7 +258,7 @@ class KlasifikasiC45TeknikInformatikaController extends Controller
        
 
 // Mengembalikan view dengan data dan pemetaan kolom
-return view('algoritma.klasifikasi_c45_matakuliah_teknik_informatika_mahasiswa', compact('total1','years',  'year', 'result1', 'total2', 
+return view('teknik_informatika.algoritma.klasifikasi_c45_matakuliah_teknik_informatika_mahasiswa', compact('total1','years',  'year', 'result1', 'total2', 
         'total3', 'total4', 'total5', 'total6', 'total7', 'total8', 'total9', 'entropyTotal1', 'totalMahasiswa'));
     }
 
@@ -441,7 +441,7 @@ return view('algoritma.klasifikasi_c45_matakuliah_teknik_informatika_mahasiswa',
             }
 
         // Mengembalikan view dengan data dan pemetaan kolom
-        return view('algoritma.prediksi.prediksi_matakuliah_teknik_informatika_mahasiswa', compact('outputData', 'columnMapping','years', 'predictedLulus', 'year' 
+        return view('teknik_informatika.algoritma.prediksi.prediksi_matakuliah_teknik_informatika_mahasiswa', compact('outputData', 'columnMapping','years', 'predictedLulus', 'year' 
             ));
     }
 

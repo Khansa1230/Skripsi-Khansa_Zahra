@@ -6,13 +6,13 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
-class MatakuliahController extends Controller
+class UtamaMatakuliahController extends Controller
 {
     public function index(){
         return view ('utama.mahasiswa.matakuliah');
     }
 
-    public function jumlah_mahasiswa_matakuliah_teknik_informatika(Request $request)
+    public function jumlah_mahasiswa_matakuliah_jurusan_teknik_informatika(Request $request)
     {
         // Mengambil tahun angkatan mahasiswa (tanpa filter status)
         $years = DB::table ('mahasiswa as m')
@@ -131,7 +131,7 @@ class MatakuliahController extends Controller
         }
     
         // Mengembalikan view dengan data yang diperlukan
-        return view('teknik_informatika.mahasiswa.jenis_matakuliah_teknik_informatika_mahasiswa', compact(
+        return view('utama.mahasiswa.jenis_matakuliah_teknik_informatika_mahasiswa', compact(
             'years', 
             'allStatus', 
             'year', 
@@ -141,7 +141,7 @@ class MatakuliahController extends Controller
         ));
     }
 
-    public function jumlah_mahasiswa_matakuliah_agribisnis(Request $request)
+    public function jumlah_mahasiswa_matakuliah_jurusan_agribisnis(Request $request)
     {
         // Mengambil tahun angkatan mahasiswa (tanpa filter status)
         $years = DB::table('mahasiswa as m')
@@ -261,7 +261,7 @@ class MatakuliahController extends Controller
         }
     
         // Mengembalikan view dengan data yang diperlukan
-        return view('agribisnis.mahasiswa.jenis_matakuliah_agribisnis_mahasiswa', compact(
+        return view('utama.mahasiswa.jenis_matakuliah_agribisnis_mahasiswa', compact(
             'years', 
             'allStatus', 
             'year', 
@@ -271,7 +271,7 @@ class MatakuliahController extends Controller
         ));
     }
    
-    public function jumlah_mahasiswa_matakuliah_biologi(Request $request)
+    public function jumlah_mahasiswa_matakuliah_jurusan_biologi(Request $request)
     {
         // Mengambil tahun angkatan mahasiswa (tanpa filter status)
         $years = DB::table('mahasiswa as m')
@@ -427,7 +427,7 @@ class MatakuliahController extends Controller
         }
     
         // Mengembalikan view dengan data yang diperlukan
-        return view('biologi.mahasiswa.jenis_matakuliah_biologi_mahasiswa', compact(
+        return view('utama.mahasiswa.jenis_matakuliah_biologi_mahasiswa', compact(
             'years', 
             'allStatus', 
             'year', 
@@ -436,7 +436,7 @@ class MatakuliahController extends Controller
             'query'
         ));
     }
-    public function jumlah_mahasiswa_matakuliah_fisika(Request $request)
+    public function jumlah_mahasiswa_matakuliah_jurusan_fisika(Request $request)
     {
         // Mengambil tahun angkatan mahasiswa (tanpa filter status)
         $years = DB::table('mahasiswa as m')
@@ -555,7 +555,7 @@ class MatakuliahController extends Controller
         }
     
         // Mengembalikan view dengan data yang diperlukan
-        return view('fisika.mahasiswa.jenis_matakuliah_fisika_mahasiswa', compact(
+        return view('utama.mahasiswa.jenis_matakuliah_fisika_mahasiswa', compact(
             'years', 
             'allStatus', 
             'year', 
@@ -565,7 +565,7 @@ class MatakuliahController extends Controller
         ));
     }
 
-    public function jumlah_mahasiswa_matakuliah_kimia(Request $request)
+    public function jumlah_mahasiswa_matakuliah_jurusan_kimia(Request $request)
     {
         // Mengambil tahun angkatan mahasiswa (tanpa filter status)
         $years = DB::table('mahasiswa as m')
@@ -692,7 +692,7 @@ class MatakuliahController extends Controller
         }
     
         // Mengembalikan view dengan data yang diperlukan
-        return view('kimia.mahasiswa.jenis_matakuliah_kimia_mahasiswa', compact(
+        return view('utama.mahasiswa.jenis_matakuliah_kimia_mahasiswa', compact(
             'years', 
             'allStatus', 
             'year', 
@@ -702,7 +702,7 @@ class MatakuliahController extends Controller
         ));
     }
 
-    public function jumlah_mahasiswa_matakuliah_matematika(Request $request)
+    public function jumlah_mahasiswa_matakuliah_jurusan_matematika(Request $request)
     {
         // Mengambil tahun angkatan mahasiswa (tanpa filter status)
         $years = DB::table('mahasiswa as m')
@@ -829,7 +829,7 @@ class MatakuliahController extends Controller
         }
     
         // Mengembalikan view dengan data yang diperlukan
-        return view('matematika.mahasiswa.jenis_matakuliah_matematika_mahasiswa', compact(
+        return view('utama.mahasiswa.jenis_matakuliah_matematika_mahasiswa', compact(
             'years', 
             'allStatus', 
             'year', 
@@ -839,7 +839,7 @@ class MatakuliahController extends Controller
         ));
     }
 
-    public function jumlah_mahasiswa_matakuliah_sistem_informasi(Request $request)
+    public function jumlah_mahasiswa_matakuliah_jurusan_sistem_informasi(Request $request)
     {
         // Mengambil tahun angkatan mahasiswa (tanpa filter status)
         $years = DB::table('mahasiswa as m')
@@ -958,7 +958,7 @@ class MatakuliahController extends Controller
         }
     
         // Mengembalikan view dengan data yang diperlukan
-        return view('sistem_informasi.mahasiswa.jenis_matakuliah_sistem_informasi_mahasiswa', compact(
+        return view('utama.mahasiswa.jenis_matakuliah_sistem_informasi_mahasiswa', compact(
             'years', 
             'allStatus', 
             'year', 
@@ -968,7 +968,7 @@ class MatakuliahController extends Controller
         ));
     }
 
-    public function jumlah_mahasiswa_matakuliah_teknik_tambang(Request $request)
+    public function jumlah_mahasiswa_matakuliah_jurusan_teknik_tambang(Request $request)
     {
         // Mengambil tahun angkatan mahasiswa (tanpa filter status)
         $years = DB::table('mahasiswa as m')
@@ -1144,7 +1144,7 @@ class MatakuliahController extends Controller
         }
     
         // Mengembalikan view dengan data yang diperlukan
-        return view('teknik_tambang.mahasiswa.jenis_matakuliah_teknik_tambang_mahasiswa', compact(
+        return view('utama.mahasiswa.jenis_matakuliah_teknik_tambang_mahasiswa', compact(
             'years', 
             'allStatus', 
             'year', 

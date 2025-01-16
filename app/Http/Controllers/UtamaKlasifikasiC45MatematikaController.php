@@ -5,9 +5,9 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
-class KlasifikasiC45FisikaController extends Controller
+class UtamaKlasifikasiC45MatematikaController extends Controller
 {
-    public function klasifikasi_mahasiswa_fisika(Request $request)
+    public function klasifikasi_mahasiswa_jurusan_matematika(Request $request)
     {
          // Ambil tahun dari database
          $years = DB::table('mahasiswa as m')
@@ -16,15 +16,16 @@ class KlasifikasiC45FisikaController extends Controller
          ->orderBy('year', 'DESC')
          ->get();
  
-        // Ambil input dari pengguna
-        $predictedLulus = $request->input('predicted_lulus'); // Ambil input dari pengguna
-        $year = $request->input('year', 'Semua'); 
-    
-        // Inisialisasi variabel untuk hasil query dan perhitungan entropi
-        $result1 = [];
-        $totalMahasiswa = 0;
-        $entropyTotal1 = 0;
-           
+     // Ambil input dari pengguna
+     $predictedLulus = $request->input('predicted_lulus'); // Ambil input dari pengguna
+     $year = $request->input('year', 'Semua'); 
+ 
+     // Inisialisasi variabel untuk hasil query dan perhitungan entropi
+     $result1 = [];
+     $totalMahasiswa = 0;
+     $entropyTotal1 = 0;
+        // Menjalankan query untuk mengambil data dari database
+        
          // Query 1: Mengambil data jenis status dan jumlah mahasiswa
          $query1 = DB::table('matakuliah as mk')
          ->join('mahasiswa as m', 'm.nim', '=', 'mk.nim')
@@ -39,7 +40,7 @@ class KlasifikasiC45FisikaController extends Controller
              "),
              DB::raw("COUNT(m.nim) AS total_mahasiswa")
          )
-         ->where('j.jurusan', 'Fisika')
+         ->where('j.jurusan', 'Matematika')
          ->groupBy('jenis_status');
  
          // Query 2: Mengambil data status mahasiswa (Aktif, Lulus, dsb)
@@ -52,7 +53,7 @@ class KlasifikasiC45FisikaController extends Controller
                  DB::raw("COUNT(CASE WHEN mk.status IN ('Tidak Aktif', 'Aktif', 'Cuti', 'Drop Out', 'Mengundurkan Diri') THEN 1 END) AS belum_lulus"),
                  DB::raw("COUNT(CASE WHEN mk.status = 'Lulus' THEN 1 END) AS lulus")
              )
-             ->where('j.jurusan', 'Fisika')
+             ->where('j.jurusan', 'Matematika')
              ->groupBy('mk.status')
              ->orderBy('mk.status');
 
@@ -66,7 +67,7 @@ class KlasifikasiC45FisikaController extends Controller
                  DB::raw("COUNT(CASE WHEN mk.status IN ('Tidak Aktif', 'Aktif', 'Cuti', 'Drop Out', 'Mengundurkan Diri') THEN 1 END) AS belum_lulus"),
                  DB::raw("COUNT(CASE WHEN mk.status = 'Lulus' THEN 1 END) AS lulus")
              )
-             ->where('j.jurusan', 'Fisika')
+             ->where('j.jurusan', 'Matematika')
              ->groupBy('jenis_sekolah')  // Perbaikan: Gunakan js.jenis_sekolah untuk konsistensi
              ->orderBy('jenis_sekolah'); // Perbaikan: Urutkan berdasarkan jenis_sekolah yang benar
  
@@ -84,7 +85,7 @@ class KlasifikasiC45FisikaController extends Controller
                  DB::raw("COUNT(CASE WHEN mk.status IN ('Tidak Aktif', 'Aktif', 'Cuti', 'Drop Out', 'Mengundurkan Diri') THEN 1 END) AS belum_lulus"),
                  DB::raw("COUNT(CASE WHEN mk.status = 'Lulus' THEN 1 END) AS lulus")
              )
-             ->where('j.jurusan', 'Fisika')
+             ->where('j.jurusan', 'Matematika')
              ->groupBy('tahun_lulus')
              ->orderByRaw("FIELD(tahun_lulus, 'Belum Daftar') DESC, tahun_lulus ASC"); // Atur urutan dengan 'Belum Daftar' di atas
          
@@ -102,7 +103,7 @@ class KlasifikasiC45FisikaController extends Controller
                  DB::raw("COUNT(CASE WHEN mk.status IN ('Tidak Aktif', 'Aktif', 'Cuti', 'Drop Out', 'Mengundurkan Diri') THEN 1 END) AS belum_lulus"),
                  DB::raw("COUNT(CASE WHEN mk.status = 'Lulus' THEN 1 END) AS lulus")
              )
-             ->where('j.jurusan', 'Fisika')
+             ->where('j.jurusan', 'Matematika')
              ->groupBy('kategori_sks')  // Menggunakan alias kategori_sks yang sudah didefinisikan di select
              ->orderBy('kategori_sks');  // Menggunakan alias kategori_sks yang sudah didefinisikan di select
  
@@ -121,7 +122,7 @@ class KlasifikasiC45FisikaController extends Controller
                  DB::raw("COUNT(CASE WHEN mk.status IN ('Tidak Aktif', 'Aktif', 'Cuti', 'Drop Out', 'Mengundurkan Diri') THEN 1 END) AS belum_lulus"),
                  DB::raw("COUNT(CASE WHEN mk.status = 'Lulus' THEN 1 END) AS lulus")
              )
-             ->where('j.jurusan', 'Fisika')
+             ->where('j.jurusan', 'Matematika')
              ->groupBy(DB::raw("kategori_ipk")) 
              ->orderBy('kategori_ipk');
  
@@ -148,7 +149,7 @@ class KlasifikasiC45FisikaController extends Controller
                  DB::raw("COUNT(CASE WHEN mk.status = 'Lulus' THEN 1 END) AS lulus")
                  
              )
-             ->where('j.jurusan', 'Fisika')
+             ->where('j.jurusan', 'Matematika')
              ->groupBy('kategori_pkl') // Menggunakan DB::raw untuk grup
              ->orderBy('kategori_pkl'); // Jangan lupa untuk mengeksekusi query
  
@@ -174,32 +175,36 @@ class KlasifikasiC45FisikaController extends Controller
                  DB::raw("COUNT(CASE WHEN mk.status IN ('Tidak Aktif', 'Aktif', 'Cuti', 'Drop Out', 'Mengundurkan Diri') THEN 1 END) AS belum_lulus"),
                  DB::raw("COUNT(CASE WHEN mk.status = 'Lulus' THEN 1 END) AS lulus")
              )
-             ->where('j.jurusan', 'Fisika')
+             ->where('j.jurusan', 'Matematika')
              ->groupBy('kategori_kkn') 
              ->orderBy('kategori_kkn'); 
- 
-         $query9 = DB::table('matakuliah as mk')
+             
+        $query9 = DB::table('matakuliah as mk')
              ->join('mahasiswa as m', 'm.nim', '=', 'mk.nim')
              ->join('jurusan as j', 'mk.kd_jurusan', '=', 'j.kd_jurusan')
              ->select(
                  DB::raw("CASE 
-                     WHEN mk.seminar IS NULL OR mk.seminar = '' THEN 
+                     WHEN mk.seminar_hasil IS NOT NULL AND mk.seminar_hasil != '' 
+                         THEN CONCAT('Semester ', mk.seminar_hasil)
+                     WHEN mk.seminar IS NOT NULL AND mk.seminar != '' 
+                         THEN CONCAT('Semester ', mk.seminar)
+                     WHEN mk.seminar_hasil IS NULL AND mk.seminar IS NULL THEN NULL
+                     ELSE 
                          CASE 
                              WHEN mk.status = 'Lulus' THEN 'lulus tidak terdata'
-                             ELSE 'Belum Daftar'
+                             ELSE 'belum daftar'
                          END
-                     ELSE CONCAT('Semester ', mk.seminar)
                  END AS kategori_seminar"),
-                 
-                 DB::raw("COUNT(mk.nim) AS total_mahasiswa"),
+                 DB::raw("COUNT(*) AS total_mahasiswa"),
                  DB::raw("COUNT(CASE WHEN mk.status IN ('Tidak Aktif', 'Aktif', 'Cuti', 'Drop Out', 'Mengundurkan Diri') THEN 1 END) AS belum_lulus"),
                  DB::raw("COUNT(CASE WHEN mk.status = 'Lulus' THEN 1 END) AS lulus")
              )
-             ->where('j.jurusan', 'Fisika')
-             ->groupBy('kategori_seminar') // Grouping berdasarkan kategori_seminar
-             ->orderBy('kategori_seminar');  // Mengurutkan berdasarkan kategori_seminar
-             
-
+             ->where('j.jurusan', 'Matematika') 
+             ->groupBy('kategori_seminar')
+             ->orderBy('kategori_seminar'); 
+         
+         $result9 = $query9->get();
+         
         // Filter by year if provided
         if ($year && $year !== 'Semua') {
             $query1->whereYear('m.tahun_angkatan', '=', $year);
@@ -210,9 +215,10 @@ class KlasifikasiC45FisikaController extends Controller
             $query6->whereYear('m.tahun_angkatan', '=', $year);
             $query7->whereYear('m.tahun_angkatan', '=', $year);
             $query8->whereYear('m.tahun_angkatan', '=', $year);
-            $query9->whereYear('m.tahun_angkatan', '=', $year);
         }
 
+        
+    
         // Eksekusi query untuk mengambil hasil
         $result1 =  $query1->get();
         $result2 = $query2->get();
@@ -238,14 +244,7 @@ class KlasifikasiC45FisikaController extends Controller
             }
         }
         //dd($result1);
-        // Pastikan predictedLulus memiliki nilai integer
-        if (is_null($predictedLulus)) {
-            $predictedLulus = 0; // Set ke 0 jika null
-        }
-        
-        // Hitung evaluasi matriks (jika ada fungsi ini)
-        $evaluation = $this->calculateEvaluationMatriks($statusCount1, $total1, (int)$predictedLulus);
-    
+       
         // Hitung entropi berbobot total (jika ada fungsi ini)
         $total2 = $this->calculateTotalWeightedEntropy($result2, $entropyTotal1, $total1, 'status');
         $total3 = $this->calculateTotalWeightedEntropy($result3, $entropyTotal1, $total1, 'jenis_sekolah');
@@ -257,12 +256,16 @@ class KlasifikasiC45FisikaController extends Controller
         $total9 = $this->calculateTotalWeightedEntropy($result9, $entropyTotal1, $total1, 'kategori_seminar');
         
 
+        //dd($query10, $data);
+
+       
+
 // Mengembalikan view dengan data dan pemetaan kolom
-return view('fisika.algoritma.klasifikasi_c45_matakuliah_fisika_mahasiswa', compact( 'total1', 'years', 'predictedLulus', 'year', 'result1', 'total2', 
-        'total3', 'total4', 'total5', 'total6', 'total7', 'total8', 'total9', 'entropyTotal1', 'evaluation', 'totalMahasiswa'));
+return view('utama.algoritma.klasifikasi_c45_matakuliah_matematika_mahasiswa', compact('total1','years',  'year', 'result1', 'total2', 
+        'total3', 'total4', 'total5', 'total6', 'total7', 'total8', 'total9', 'entropyTotal1', 'totalMahasiswa'));
     }
-    
-    public function prediksi_mahasiswa_fisika(Request $request)
+
+    public function prediksi_mahasiswa_jurusan_matematika(Request $request)
     {
          // Ambil tahun dari database
          $years = DB::table('mahasiswa as m')
@@ -286,7 +289,7 @@ return view('fisika.algoritma.klasifikasi_c45_matakuliah_fisika_mahasiswa', comp
             ->join('jurusan as j', 'mk.kd_jurusan', '=', 'j.kd_jurusan')
             ->join('jenis_sekolah_mahasiswa_baru as js', 'js.kd_jenis_sekolah', '=', 'm.kd_jenis_sekolah')
             ->select(
-            DB::raw("CASE 
+        DB::raw("CASE 
                     WHEN mk.sks >= 144 THEN 'Memenuhi'
                     ELSE 'Belum Memenuhi'
                 END AS kategori_sks"),
@@ -323,12 +326,16 @@ return view('fisika.algoritma.klasifikasi_c45_matakuliah_fisika_mahasiswa', comp
                         END
                 END AS kategori_kkn"),
                 DB::raw("CASE 
-                     WHEN mk.seminar IS NULL OR mk.seminar = '' THEN 
+                     WHEN mk.seminar_hasil IS NOT NULL AND mk.seminar_hasil != '' 
+                         THEN CONCAT('Semester ', mk.seminar_hasil)
+                     WHEN mk.seminar IS NOT NULL AND mk.seminar != '' 
+                         THEN CONCAT('Semester ', mk.seminar)
+                     WHEN mk.seminar_hasil IS NULL AND mk.seminar IS NULL THEN NULL
+                     ELSE 
                          CASE 
                              WHEN mk.status = 'Lulus' THEN 'lulus tidak terdata'
-                             ELSE 'Belum Daftar'
+                             ELSE 'belum daftar'
                          END
-                     ELSE CONCAT('Semester ', mk.seminar)
                  END AS kategori_seminar"),
                 DB::raw("
                 CASE 
@@ -338,7 +345,7 @@ return view('fisika.algoritma.klasifikasi_c45_matakuliah_fisika_mahasiswa', comp
                 END AS kategori
                 "),
             )
-            ->where('j.jurusan', '=', 'Fisika');
+            ->where('j.jurusan', '=', 'Matematika');
         
         // Filter by year if provided
         if ($year && $year !== 'Semua') {
@@ -348,7 +355,14 @@ return view('fisika.algoritma.klasifikasi_c45_matakuliah_fisika_mahasiswa', comp
         // Eksekusi query untuk mengambil hasil
         $query10 = $query10->get();
         
-        // Mengonversi hasil query menjadi format yang bisa digunakan oleh Python
+         // Hitung test_size
+         $testSize = 100 - $predictedLulus; // Menghitung test_size
+
+         // Simpan test_size ke file JSON untuk digunakan di Python
+         $testSizeFilePath = 'C:\\xampp\\htdocs\\skripsi\\app\\python_scripts\\matematika\\test_size.json';
+         file_put_contents($testSizeFilePath, json_encode(['test_size' => $testSize]));
+
+            // Mengonversi hasil query menjadi format yang bisa digunakan oleh Python
         $data = [];
         foreach ($query10 as $row) {
             $data[] = [
@@ -361,28 +375,21 @@ return view('fisika.algoritma.klasifikasi_c45_matakuliah_fisika_mahasiswa', comp
             ];
         }
 
-        //dd($query10, $data);
-         // Hitung test_size
-        $testSize = 100 - $predictedLulus; // Menghitung test_size
-
-        // Simpan test_size ke file JSON untuk digunakan di Python
-        $testSizeFilePath = 'C:\\xampp\\htdocs\\skripsi\\app\\python_scripts\\fisika\\test_size.json';
-        file_put_contents($testSizeFilePath, json_encode(['test_size' => $testSize]));
-
+        
         // Menyimpan data ke file JSON untuk digunakan di Python
-        $jsonFilePath = 'C:\\xampp\\htdocs\\skripsi\\app\\python_scripts\\fisika\\data.json';
+        $jsonFilePath = 'C:\\xampp\\htdocs\\skripsi\\app\\python_scripts\\matematika\\data.json';
         file_put_contents($jsonFilePath, json_encode($data));
         // Menyimpan informasi kol om yang terkait dengan setiap kategori
         $columnMapping = [
-            'kategori_sks' => 'Satuan Kredit Skor',
-            'kategori_ipk' => 'Indeks Prestasi Kumulatif',
-            'kategori_pkl' => 'Praktek Kerja Lapangan', // atau kolom lain yang relevan
-            'kategori_kkn' => 'Kuliah Kerja Nyata',
-            'kategori_seminar' => 'Seminar',
+        'kategori_sks' => 'Satuan Kredit Skor',
+        'kategori_ipk' => 'Indeks Prestasi Kumulatif',
+        'kategori_pkl' => 'Praktek Kerja Lapangan', // atau kolom lain yang relevan
+        'kategori_kkn' => 'Kuliah Kerja Nyata',
+        'kategori_seminar' => 'Seminar',
         ];
 
-       // Menjalankan skrip Python
-        $pythonScriptPath = 'C:\\xampp\\htdocs\\skripsi\\app\\python_scripts\\fisika\\decision_tree_visualization.py';
+        // Menjalankan skrip Python
+        $pythonScriptPath = 'C:\\xampp\\htdocs\\skripsi\\app\\python_scripts\\matematika\\decision_tree_visualization.py';
         $output = shell_exec("python \"$pythonScriptPath\"");
 
         // Decode output JSON
@@ -441,13 +448,11 @@ return view('fisika.algoritma.klasifikasi_c45_matakuliah_fisika_mahasiswa', comp
             }
 
         // Mengembalikan view dengan data dan pemetaan kolom
-        return view('fisika.algoritma.prediksi.prediksi_matakuliah_fisika_mahasiswa', compact('outputData', 'columnMapping','years', 'predictedLulus', 'year' 
+        return view('utama.algoritma.prediksi.prediksi_matakuliah_matematika_mahasiswa', compact('outputData', 'columnMapping','years', 'predictedLulus', 'year' 
             ));
-     }
-   
+    }
 
-    
-     public function calculateEntropy(object $item, float $entropyTotal1, float $total1): array {
+    public function calculateEntropy(object $item, float $entropyTotal1, float $total1): array {
         $data2 = [
             'total_mahasiswa' => $item->total_mahasiswa,
             'belum_lulus' => $item->belum_lulus,
@@ -508,46 +513,5 @@ return view('fisika.algoritma.klasifikasi_c45_matakuliah_fisika_mahasiswa', comp
         return $results;
     }
 
-    public function calculateEvaluationMatriks(array $statusCount1, int $total1, int $predictedLulus): array
-    {
-        // Data evaluasi awal
-        $data1 = [
-            'total_mahasiswa' => $total1,
-            'belum_lulus' => $statusCount1['Belum Lulus'] ?? 0,
-            'lulus' => $statusCount1['Lulus'] ?? 0,
-        ];
-
-        // Inisialisasi variabel TP, TN, FN, FP
-        $TP = $data1['lulus']; // True Positive
-        $TN = $data1['belum_lulus']; // True Negative
-        $FN = 0;
-        $FP = 0;
-
-        // Hitung FN dan FP
-        if ($predictedLulus < $TP) {
-            $FN = $TP - $predictedLulus; // False Negative
-        } elseif ($predictedLulus > $TP) {
-            $FP = $predictedLulus - $TP; // False Positive
-        }
-
-        // Hitung akurasi
-        $accuracy = ($TP + $TN) > 0 ? ($TP + $TN) / ($TP + $TN + $FP + $FN) : 0;
-        // Hitung Presisi
-        $precision = ($TP) > 0 ? ($TP) / ($TP +  $FP ) : 0;
-        // Hitung Recall
-        $recall = ($TP) > 0 ? ($TP) / ($TP +  $FN ) : 0;
-        // Hitung F1-Score
-        $f1_score = ($precision + $recall) > 0 ? 2 * ($precision * $recall) / ($precision + $recall) : 0;
-        // Tambahkan hasil evaluasi ke data
-        $data1['TP'] = $TP;
-        $data1['TN'] = $TN;
-        $data1['FN'] = $FN;
-        $data1['FP'] = $FP;
-        $data1['accuracy'] = $accuracy;
-        $data1['precision'] = $precision;
-        $data1['recall'] = $recall;
-        $data1['f1_score'] = $f1_score;
-
-        return $data1;
-    }
+    
 }

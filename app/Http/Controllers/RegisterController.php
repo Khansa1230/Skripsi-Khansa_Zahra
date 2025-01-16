@@ -13,6 +13,7 @@ class RegisterController extends Controller
         return view ('auth.register');
     }
 
+
     public function store(Request $request)
     {
         $request->validate([
@@ -28,19 +29,19 @@ class RegisterController extends Controller
                 'unique:users,nim', // Pastikan NIM unik di tabel users
             ],
             'password' => [
-    'required',
-    'string',
-    'min:8',
-    'regex:/[A-Z]/', // Setidaknya satu huruf kapital
-    'regex:/[a-z]/', // Setidaknya satu huruf kecil
-    'regex:/[0-9]/', // Setidaknya satu angka
-    'regex:/^(?=.*[a-zA-Z].*[a-zA-Z]).*$/',
-    'confirmed', // Memeriksa password dan password_confirmation
-],
+            'required',
+            'string',
+            'min:8',
+            'regex:/[A-Z]/', // Setidaknya satu huruf kapital
+            'regex:/[a-z]/', // Setidaknya satu huruf kecil
+            'regex:/[0-9]/', // Setidaknya satu angka
+            'regex:/^(?=.*[a-zA-Z].*[a-zA-Z]).*$/',
+            'confirmed', // Memeriksa password dan password_confirmation
+        ],
 
         ], [
             'email_uin.unique' => 'The Email has already been taken.',
-            'nim.unique' => 'The NIM has already been taken.',
+            'nim.unique' => 'The NI has already been taken.',
             'password.regex' => 'The password must include at least one uppercase letter (A-Z), one lowercase letter (a-z), one number (0-9).', 'or The password must contain at least two different letters',
             'password.confirmed' => 'The password confirmation does not match.',
         ]);
@@ -48,16 +49,20 @@ class RegisterController extends Controller
         // Validasi apakah NIM terdaftar di tabel mahasiswa
         $mahasiswa = DB::table('mahasiswa')->where('nim', $request->nim)->first();
 
-        if (!$mahasiswa) {
+        // Validasi apakah NIM terdaftar di tabel pekerja
+        $pekerja = DB::table('pekerja')->where('ni', $request->nim)->first();
+
+        if (!$mahasiswa && !$pekerja) {
             return redirect()->back()->withErrors([
-                'nim' => 'The NIM is not registered.',
+                'nim' => 'The NI is not registered.',
             ])->withInput();
         }
 
         // Validasi email yang dimasukkan harus sesuai dengan email yang terdaftar di mahasiswa
-        if ($mahasiswa->email_uin !== $request->email_uin) {
+
+        if (($mahasiswa && $mahasiswa->email_uin !== $request->email_uin) || ($pekerja && $pekerja->email !== $request->email_uin)) {
             return redirect()->back()->withErrors([
-                'email_uin' => 'This email does not belong to the provided NIM. Please provide the correct email associated with your NIM.',
+                'email_uin' => 'This email does not belong to the provided NI. Please provide the correct email associated with your NI.',
             ])->withInput();
         }
 

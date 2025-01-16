@@ -315,7 +315,7 @@ class KlasifikasiC45TeknikTambangController extends Controller
         $total13 = $this->calculateTotalWeightedEntropy($result13, $entropyTotal1, $total1, 'kategori_seminar');
         
 // Mengembalikan view dengan data dan pemetaan kolom
-return view('algoritma.klasifikasi_c45_matakuliah_teknik_tambang_mahasiswa', compact('total1','years',  'year', 'result1', 'total2', 
+return view('teknik_tambang.algoritma.klasifikasi_c45_matakuliah_teknik_tambang_mahasiswa', compact('total1','years',  'year', 'result1', 'total2', 
         'total3', 'total4', 'total5', 'total6', 'total7', 'total8', 'total9', 'total11', 'total12', 'total13', 'entropyTotal1',  'totalMahasiswa'));
     }
 
@@ -521,7 +521,7 @@ return view('algoritma.klasifikasi_c45_matakuliah_teknik_tambang_mahasiswa', com
             }
 
         // Mengembalikan view dengan data dan pemetaan kolom
-        return view('algoritma.prediksi.prediksi_matakuliah_teknik_tambang_mahasiswa', compact('outputData', 'columnMapping','years', 'predictedLulus', 'year' 
+        return view('teknik_tambang.algoritma.prediksi.prediksi_matakuliah_teknik_tambang_mahasiswa', compact('outputData', 'columnMapping','years', 'predictedLulus', 'year' 
             ));
     }
 

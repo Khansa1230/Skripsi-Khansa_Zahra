@@ -64,5 +64,15 @@ class Kernel extends HttpKernel
         'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
         'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
         'shareMahasiswaData' => \App\Http\Middleware\ShareMahasiswaData::class,
+        'teknik_informatika' => \App\Http\Middleware\TeknikInformatika::class,
+        'sistem_informasi' => \App\Http\Middleware\SistemInformasi::class,
+        'agribisnis' => \App\Http\Middleware\Agribisnis::class,
+        'biologi' => \App\Http\Middleware\Biologi::class,
+        'fisika' => \App\Http\Middleware\Fisika::class,
+        'kimia' => \App\Http\Middleware\Kimia::class,
+        'matematika' => \App\Http\Middleware\Matematika::class,
+        'teknik_tambang' => \App\Http\Middleware\TeknikTambang::class,
+        'penanggung_jawab' => \App\Http\Middleware\PenanggungJawab::class,
     ];
+    
 }

@@ -259,7 +259,7 @@ class KlasifikasiC45KimiaController extends Controller
 
 
 // Mengembalikan view dengan data dan pemetaan kolom
-return view('algoritma.klasifikasi_c45_matakuliah_kimia_mahasiswa', compact( 'total1', 'years',  'year', 'result1', 'total2', 
+return view('kimia.algoritma.klasifikasi_c45_matakuliah_kimia_mahasiswa', compact( 'total1', 'years',  'year', 'result1', 'total2', 
         'total3', 'total4', 'total5', 'total6', 'total7', 'total8', 'total9', 'entropyTotal1', 'totalMahasiswa'));
     }
 
@@ -448,7 +448,7 @@ return view('algoritma.klasifikasi_c45_matakuliah_kimia_mahasiswa', compact( 'to
             }
 
         // Mengembalikan view dengan data dan pemetaan kolom
-        return view('algoritma.prediksi.prediksi_matakuliah_kimia_mahasiswa', compact('outputData', 'columnMapping','years', 'predictedLulus', 'year' 
+        return view('kimia.algoritma.prediksi.prediksi_matakuliah_kimia_mahasiswa', compact('outputData', 'columnMapping','years', 'predictedLulus', 'year' 
             ));
     }
      

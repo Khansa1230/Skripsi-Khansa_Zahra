@@ -254,7 +254,7 @@ class KlasifikasiC45SistemInformasiController extends Controller
        
 
 // Mengembalikan view dengan data dan pemetaan kolom
-return view('algoritma.klasifikasi_c45_matakuliah_sistem_informasi_mahasiswa', compact('total1','years', 'year', 'result1', 'total2', 
+return view('sistem_informasi.algoritma.klasifikasi_c45_matakuliah_sistem_informasi_mahasiswa', compact('total1','years', 'year', 'result1', 'total2', 
         'total3', 'total4', 'total5', 'total6', 'total7', 'total8', 'total9', 'entropyTotal1',  'totalMahasiswa'));
     }
 
@@ -439,7 +439,7 @@ return view('algoritma.klasifikasi_c45_matakuliah_sistem_informasi_mahasiswa', c
             }
 
         // Mengembalikan view dengan data dan pemetaan kolom
-        return view('algoritma.prediksi.prediksi_matakuliah_sistem_informasi_mahasiswa', compact('outputData', 'columnMapping','years', 'predictedLulus', 'year' 
+        return view('sistem_informasi.algoritma.prediksi.prediksi_matakuliah_sistem_informasi_mahasiswa', compact('outputData', 'columnMapping','years', 'predictedLulus', 'year' 
             ));
     }
 
@@ -504,46 +504,5 @@ return view('algoritma.klasifikasi_c45_matakuliah_sistem_informasi_mahasiswa', c
         return $results;
     }
 
-    public function calculateEvaluationMatriks(array $statusCount1, int $total1, int $predictedLulus): array
-    {
-        // Data evaluasi awal
-        $data1 = [
-            'total_mahasiswa' => $total1,
-            'belum_lulus' => $statusCount1['Belum Lulus'] ?? 0,
-            'lulus' => $statusCount1['Lulus'] ?? 0,
-        ];
-
-        // Inisialisasi variabel TP, TN, FN, FP
-        $TP = $data1['lulus']; // True Positive
-        $TN = $data1['belum_lulus']; // True Negative
-        $FN = 0;
-        $FP = 0;
-
-        // Hitung FN dan FP
-        if ($predictedLulus < $TP) {
-            $FN = $TP - $predictedLulus; // False Negative
-        } elseif ($predictedLulus > $TP) {
-            $FP = $predictedLulus - $TP; // False Positive
-        }
-
-        // Hitung akurasi
-        $accuracy = ($TP + $TN) > 0 ? ($TP + $TN) / ($TP + $TN + $FP + $FN) : 0;
-        // Hitung Presisi
-        $precision = ($TP) > 0 ? ($TP) / ($TP +  $FP ) : 0;
-        // Hitung Recall
-        $recall = ($TP) > 0 ? ($TP) / ($TP +  $FN ) : 0;
-        // Hitung F1-Score
-        $f1_score = ($precision + $recall) > 0 ? 2 * ($precision * $recall) / ($precision + $recall) : 0;
-        // Tambahkan hasil evaluasi ke data
-        $data1['TP'] = $TP;
-        $data1['TN'] = $TN;
-        $data1['FN'] = $FN;
-        $data1['FP'] = $FP;
-        $data1['accuracy'] = $accuracy;
-        $data1['precision'] = $precision;
-        $data1['recall'] = $recall;
-        $data1['f1_score'] = $f1_score;
-
-        return $data1;
-    }
+   
 }

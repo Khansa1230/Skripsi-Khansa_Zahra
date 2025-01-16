@@ -43,4 +43,19 @@ class User extends Authenticatable
         'nim_verified_at' => 'datetime',
         'email_uin_verified_at' => 'datetime',
     ];
+
+    /**
+     * Relasi ke tabel matakuliah.
+     * 
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     */
+    public function matakuliah()
+    {
+        return $this->hasOne(Matakuliah::class, 'nim', 'nim');
+    }
+
+    public function pekerja()
+    {
+        return $this->hasOne(Pekerja::class, 'ni', 'nim');
+    }
 }
